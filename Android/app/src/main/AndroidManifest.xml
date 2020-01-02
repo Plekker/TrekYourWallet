@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.flow">
+    <!--
+         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+         Google Maps Android API v2, but you must specify either coarse or fine
+         location permissions for the 'MyLocation' functionality. 
+    -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+
+    <application
+        android:theme="@style/AppTheme"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="Trek Your Wallet"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:replace="android:icon,android:label"
+        >
+
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyApsuynhkRf3A7p3fgKQp01EEF8l4tggXQ" />
+
+
+
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme"
+            >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".Home"
+            android:parentActivityName=".displayClasses.LoginScreens.Login"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".displayClasses.LoginScreens.Login" />
+        </activity>
+
+        <activity
+            android:name=".displayClasses.LoginScreens.activity_register"
+            android:theme="@style/AppTheme"
+            />
+
+        <activity
+            android:name=".displayClasses.LoginScreens.Login"
+            android:theme="@style/AppTheme"
+            />
+        <activity
+            android:name=".displayClasses.AccountScreen.PreferenceFragmentAccount"
+            android:label="Edit account information"
+            android:theme="@style/AppTheme"/>
+
+        <activity android:name=".displayClasses.SettingsScreen.TermsAndConditions.CreateTermsAndConditions">
+            <intent-filter>
+                <action android:name=".displayClasses.TermsAndConditions.CreateTermsAndConditions"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".displayClasses.LogOutScreen.LogOut" />
+
+
+    </application>
+
+</manifest>

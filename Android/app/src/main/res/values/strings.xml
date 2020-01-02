@@ -1,0 +1,33 @@
+<resources>
+    //------General
+    <string name="AppName">Trek\nYour\nWallet</string>
+
+
+    //------Login
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="noAccount">No account yet? Create one</string>
+    <string name="unvalid">Unvalid Email or Password</string>
+
+    //------Register
+    <string name="name">Name</string>
+    <string name="confirm">Confirm</string>
+    <string name="create">Create Account</string>
+    <string name="alreadyMember">Already a member? Login</string>
+    <string name="mailValid">Email is already used by different user</string>
+
+    //------Overview
+    <string name="remaining">Budget remaining today:</string>
+    <string name="activate">Set a trip to current to check budget here</string>
+
+    //------AddExpense
+    <string name="addExpense">Add expense</string>
+    <string name="expenseName">Name</string>
+    <string name="expensePrice">Price</string>
+    <string name="eur">€</string>
+
+</resources>
+
+
+
