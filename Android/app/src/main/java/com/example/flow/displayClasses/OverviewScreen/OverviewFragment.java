@@ -1,4 +1,4 @@
-package com.example.flow.displayClasses.GroupScreens;
+package com.example.flow.displayClasses.OverviewScreen;
 
 
 import android.annotation.SuppressLint;
@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 
 import com.example.flow.R;
 
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -25,7 +24,7 @@ import com.example.flow.classes.Expense;
 import com.example.flow.services.CurrentData;
 import com.example.flow.services.RetrofitBuild;
 
-import java.util.ArrayList;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import android.support.annotation.Nullable;
@@ -37,13 +36,8 @@ import retrofit2.Response;
 
 public class OverviewFragment extends Fragment
 {
+    private static DecimalFormat df = new DecimalFormat("0.00");
     private final String TAG = this.getClass().getSimpleName();
-
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
 
     public OverviewFragment() {
         // Required empty public constructor
@@ -52,8 +46,6 @@ public class OverviewFragment extends Fragment
     public static OverviewFragment newInstance(String param1, String param2) {
         OverviewFragment fragment = new OverviewFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,8 +57,6 @@ public class OverviewFragment extends Fragment
 
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
 
@@ -77,6 +67,21 @@ public class OverviewFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View RootView = inflater.inflate(R.layout.fragment_overview, container, false);
+
+        ImageButton ID = RootView.findViewById(R.id.plusButton);
+        ID.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                AddExpenseFragment NAME = new AddExpenseFragment();
+                fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
+                fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
+                fragmentTransaction.commit();
+
+            }
+        });
 
         RetrofitBuild retrofit = RetrofitBuild.getInstance();
         Call<List<Expense>> call = retrofit.apiService.getExpensesForCurrentTrip("application/json", CurrentPerson.ApiKey);
@@ -99,51 +104,13 @@ public class OverviewFragment extends Fragment
                     CurrentData.currentTrip = CurrentData.expenesForCurrenTrip.get(0).getTrip();
 
                     TextView textView = RootView.findViewById(R.id.budgetRemaining);
-                    textView.setText(Double.toString(CurrentData.currentTrip.getBudgetRemainingToday()));
+                    textView.setText(df.format(CurrentData.currentTrip.getBudgetRemainingToday()));
 
                     ListView list = RootView.findViewById(R.id.listView);
                     CustomAdapter adapter = new CustomAdapter();
                     list.setAdapter(adapter);
 
-                    /*
-                    list.setOnItemClickListener(new AdapterView.OnItemClickListener()
-                    {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-                        {
 
-                            selectedGroup = UsedObjects.groups.get(position);
-                            HomeGroupFragment homeGroupFragment = new HomeGroupFragment();
-                            FragmentManager manager = getFragmentManager();
-                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                            Fragment f = homeGroupFragment;
-                            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                            Bundle bundle = new Bundle();
-                            f.setArguments(bundle);
-                            ft.setCustomAnimations(R.anim.push_left_in, R.anim.push_left_out);
-                            ft.replace(R.id.relativelayout_for_fragment, f, homeGroupFragment.getTag());
-                            ft.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
-                            ft.commit();
-
-
-                        }
-                    });
-        */
-
-                    ImageButton ID = RootView.findViewById(R.id.plusButton);
-                    ID.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                            FragmentManager fragmentManager = getFragmentManager();
-                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            AddExpenseFragment NAME = new AddExpenseFragment();
-                            fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
-                            fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
-                            fragmentTransaction.commit();
-
-                        }
-                    });
                 }
             }
 
@@ -183,7 +150,7 @@ public class OverviewFragment extends Fragment
 
         public View getView(int i, View view, ViewGroup viewgroup)
         {
-            view = getLayoutInflater().inflate(R.layout.expensen_layout, null);
+            view = getLayoutInflater().inflate(R.layout.layout_expense, null);
 
             TextView textViewName = view.findViewById(R.id.expenseName);
             TextView textViewPrice = view.findViewById(R.id.price);

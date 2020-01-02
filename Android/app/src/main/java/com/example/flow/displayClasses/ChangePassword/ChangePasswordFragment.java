@@ -10,8 +10,6 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +20,7 @@ import android.widget.EditText;
 import com.example.flow.R;
 import com.example.flow.classes.CurrentPerson;
 import com.example.flow.displayClasses.AccountScreen.AccountFragment;
-import com.example.flow.displayClasses.GroupScreens.OverviewFragment;
+import com.example.flow.displayClasses.OverviewScreen.OverviewFragment;
 import com.example.flow.services.ChangePasswordInfo;
 import com.example.flow.services.RetrofitBuild;
 

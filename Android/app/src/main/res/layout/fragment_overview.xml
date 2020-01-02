@@ -6,7 +6,7 @@
     android:id="@+id/groupsLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".displayClasses.GroupScreens.OverviewFragment"
+    tools:context=".displayClasses.OverviewScreen.OverviewFragment"
     >
 
     <TextView
@@ -14,8 +14,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:textSize="20sp"
@@ -40,8 +41,8 @@
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="386dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="20dp"
         android:layout_marginTop="19dp"
@@ -60,12 +61,15 @@
         android:layout_height="wrap_content"
 
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="298dp"
+        android:layout_marginLeft="298dp"
         android:layout_marginEnd="25dp"
+        android:layout_marginRight="25dp"
         android:layout_marginBottom="55dp"
         android:background="@android:color/transparent"
-        android:src="@drawable/ic_plussign" />
+        app:srcCompat="@drawable/ic_plussign" />
 
 
 

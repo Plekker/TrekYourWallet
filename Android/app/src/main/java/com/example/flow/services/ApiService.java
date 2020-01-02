@@ -2,6 +2,7 @@ package com.example.flow.services;
 
 import com.example.flow.classes.Expense;
 import com.example.flow.classes.Person;
+import com.example.flow.classes.Trip;
 
 import java.util.List;
 
@@ -32,4 +33,7 @@ public interface ApiService {
 
     @POST("api/Trips/AddExpense/{tripId}")
     Call<Expense> addExpense(@Header("Content-Type") String contentType, @Header("x-api-key")String ApiKey, @Path("tripId") int tripId, @Body Expense expense);
+
+    @GET("api/Trips")
+    Call<List<Trip>> getTrips(@Header("Content-Type") String contentType, @Header("x-api-key")String ApiKey);
 }

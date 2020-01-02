@@ -13,9 +13,10 @@ import android.view.Gravity;
 
 import com.example.flow.classes.CurrentPerson;
 import com.example.flow.classes.Person;
-import com.example.flow.displayClasses.GroupScreens.OverviewFragment;
+import com.example.flow.displayClasses.OverviewScreen.OverviewFragment;
 import com.example.flow.displayClasses.LogOutScreen.LogOut;
 import com.example.flow.displayClasses.ChangePassword.ChangePasswordFragment;
+import com.example.flow.displayClasses.TripsScreen.TripsFragment;
 
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -58,7 +59,7 @@ public class Home extends AppCompatActivity
 
 
 
-        com.example.flow.displayClasses.GroupScreens.OverviewFragment overviewFragment = new com.example.flow.displayClasses.GroupScreens.OverviewFragment();
+        com.example.flow.displayClasses.OverviewScreen.OverviewFragment overviewFragment = new com.example.flow.displayClasses.OverviewScreen.OverviewFragment();
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(
                 R.id.relativelayout_for_fragment,
@@ -71,42 +72,6 @@ public class Home extends AppCompatActivity
 
 
     }
-
-    /*
-    public void onFirst(){
-        Boolean isFirstRun = getSharedPreferences("PREFERENCES",MODE_PRIVATE).getBoolean("isFirstRun",true);
-
-        if(isFirstRun) {
-
-            LayoutInflater inflater = getLayoutInflater();
-
-
-            new AlertDialog.Builder(Home.this)
-
-                    .setTitle("Terms & Conditions")
-                    .setView(inflater.inflate(R.layout.termsofservice, null))
-                    .setNegativeButton("Decline", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                            System.exit(0);
-                        }
-                    })
-                    .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            getSharedPreferences("PREFERENCE", MODE_PRIVATE)
-                                    .edit()
-                                    .putBoolean("isFirstRun", false)
-                                    .apply();
-
-
-                        }
-                    }).show();
-
-
-        }
-    }*/
 
     @Override
     public void onBackPressed() {
@@ -169,7 +134,7 @@ public class Home extends AppCompatActivity
         }
         else if (id == R.id.trips) {
 
-            OverviewFragment overviewFragment = new OverviewFragment();
+            TripsFragment tripsFragment = new TripsFragment();
             FragmentManager manager = getSupportFragmentManager();
             for(int i = 0; i < manager.getBackStackEntryCount(); ++i) {
                 manager.popBackStack();
@@ -177,21 +142,21 @@ public class Home extends AppCompatActivity
             manager.beginTransaction()
                     .setCustomAnimations(R.anim.push_left_in, R.anim.push_left_out)
                     .replace(R.id.relativelayout_for_fragment,
-                            overviewFragment,
-                            overviewFragment.getTag()
+                            tripsFragment,
+                            tripsFragment.getTag()
                     )
                     .commit();
         }
 
         else if (id == R.id.overview) {
 
-            com.example.flow.displayClasses.GroupScreens.OverviewFragment overviewFragment = new com.example.flow.displayClasses.GroupScreens.OverviewFragment();
+            com.example.flow.displayClasses.OverviewScreen.OverviewFragment overviewFragment = new com.example.flow.displayClasses.OverviewScreen.OverviewFragment();
             FragmentManager manager = getSupportFragmentManager();
             for(int i = 0; i < manager.getBackStackEntryCount(); ++i) {
                 manager.popBackStack();
             } //to completly delete backstack
             manager.beginTransaction()
-                    .setCustomAnimations(R.anim.push_left_in, R.anim.push_left_out)
+                    .setCustomAnimations(R.anim.push_left_out, R.anim.push_left_in)
                     .replace(R.id.relativelayout_for_fragment,
                             overviewFragment,
                             overviewFragment.getTag()

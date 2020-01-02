@@ -7,5 +7,6 @@ import java.util.List;
 
 public class CurrentData {
     public static List<Expense> expenesForCurrenTrip;
+    public static List<Trip> trips;
     public static Trip currentTrip;
 }
