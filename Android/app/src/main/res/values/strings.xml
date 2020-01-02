@@ -27,6 +27,30 @@
     <string name="expensePrice">Price</string>
     <string name="eur">€</string>
 
+    //------ChangePassword
+    <string name="change_password_heading">Change Password</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="done_button">Update Password</string>
+    <string name="required">Password not strong enough</string>
+    <string name="passwords_check">Passwords do not match!</string>
+
+    //------Navigation
+    <string name="overview">Overview</string>
+    <string name="trips">Trips</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="username">Username</string>
+    <string name="lastname">Last name</string>
+    <string name="firstname">First name</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+
+
+
 </resources>
 
 

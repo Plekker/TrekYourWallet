@@ -302,7 +302,8 @@ public class AccountFragment extends Fragment {
         qrCode.setImageDrawable(getResources().getDrawable(R.drawable.ic_hourglass_full_teal_24dp));
 
         if (TextUtils.isEmpty(username)) {
-            username = getString(R.string.no_name);
+            username="fghjk";
+            //username = getString(R.string.no_name);
         }
 
         VCard vCard = new VCard(username)

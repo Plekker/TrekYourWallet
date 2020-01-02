@@ -73,7 +73,6 @@ public class ChangePasswordFragment extends Fragment {
         _newPassword = Rootview.findViewById(R.id.new_password);
         _confirmPassword = Rootview.findViewById(R.id.connfirm_password);
         _doneButton = Rootview.findViewById(R.id.done_button);
-        _deleteButton = Rootview.findViewById(R.id.delete_button);
         //-----------------
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mActivity);
@@ -94,15 +93,15 @@ public class ChangePasswordFragment extends Fragment {
 
     private boolean checkEmptyText() {
         if (!validate((_oldPassword))) {
-            _oldPassword.setError(getString(R.string.required_error));
+            _oldPassword.setError(getString(R.string.required));
             _oldPassword.requestFocus();
             return false;
         }else if (!validate((_newPassword))) {
-            _newPassword.setError(getString(R.string.required_error));
+            _newPassword.setError(getString(R.string.required));
             _newPassword.requestFocus();
             return false;
         } else if (_confirmPassword.getText().toString().equals("") || !_confirmPassword.getText().toString().equals(_newPassword.getText().toString())) {
-            _confirmPassword.setError(getString(R.string.required_error));
+            _confirmPassword.setError(getString(R.string.required));
             _confirmPassword.requestFocus();
             return false;
         } else {

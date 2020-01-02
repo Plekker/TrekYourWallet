@@ -20,8 +20,8 @@ public class PreferenceFragmentAccount extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
         // Load the Preferences from the XML file
-        addPreferencesFromResource(R.xml.account);
-        setPreferencesFromResource(R.xml.account, s);
+        //addPreferencesFromResource(R.xml.account);
+        //setPreferencesFromResource(R.xml.account, s);
 
     }
 }
