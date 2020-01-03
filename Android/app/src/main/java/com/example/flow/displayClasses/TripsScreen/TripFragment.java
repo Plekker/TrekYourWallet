@@ -57,7 +57,7 @@ public class TripFragment extends Fragment
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            tempTrip = bundle.getParcelable("trip"); // Key
+            trip = bundle.getParcelable("trip"); // Key
         }
 
 
@@ -68,60 +68,68 @@ public class TripFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View RootView = inflater.inflate(R.layout.fragment_trip, container, false);
+        TextView nameTrip = RootView.findViewById(R.id.nameCreatedTrip);
+        TextView budget = RootView.findViewById(R.id.createdTripBudget);
+        TextView remainingBudget = RootView.findViewById(R.id.createdTripRemainingBudget);
+        TextView style = RootView.findViewById(R.id.style);
 
-        RetrofitBuild retrofit = RetrofitBuild.getInstance();
-        Call<Trip> call = retrofit.apiService.calculate("application/json", CurrentPerson.ApiKey, tempTrip.getId(), tempTrip);
-        call.enqueue(new Callback<Trip>() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onResponse(Call<Trip> call, Response<Trip> response) {
-                trip = response.body();
-                TextView nameTrip = RootView.findViewById(R.id.nameCreatedTrip);
-                TextView budget = RootView.findViewById(R.id.createdTripBudget);
-                TextView remainingBudget = RootView.findViewById(R.id.createdTripRemainingBudget);
-                TextView style = RootView.findViewById(R.id.style);
+        nameTrip.setText(trip.getNaam());
+        budget.setText(getString(R.string.budgetCreatedTrip, df.format(trip.getBudget())));
+        remainingBudget.setText(getString(R.string.budgetSpendCreatedTrip, df.format(trip.getBudgetSpend())));
 
-                nameTrip.setText(trip.getNaam());
-                budget.setText(getString(R.string.budgetCreatedTrip, df.format(trip.getBudget())));
-                remainingBudget.setText(getString(R.string.budgetSpendCreatedTrip, df.format(trip.getBudgetSpend())));
+        switch(trip.getType()){
+            case 0:
+                style.setText(R.string.style0); break;
+            case 1:
+                style.setText(R.string.style1); break;
+            case 2:
+                style.setText(R.string.style2); break;
+            case 3:
+                style.setText(R.string.style3); break;
+            case 4:
+                style.setText(R.string.style4); break;
+            case 5:
+                style.setText(R.string.style5); break;
 
-                switch(trip.getType()){
-                    case 0:
-                        style.setText(R.string.style0); break;
-                    case 1:
-                        style.setText(R.string.style1); break;
-                    case 2:
-                        style.setText(R.string.style2); break;
-                    case 3:
-                        style.setText(R.string.style3); break;
-                    case 4:
-                        style.setText(R.string.style4); break;
-                    case 5:
-                        style.setText(R.string.style5); break;
+        }
 
+        Button activate = RootView.findViewById(R.id.setToCurrent);
+
+        if(!trip.isCurrentTrip()){
+            activate.setEnabled(true);
+            activate.setText(R.string.setCurrent);
+
+            activate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    RetrofitBuild retrofit = RetrofitBuild.getInstance();
+                    Call<Trip> call = retrofit.apiService.activate("application/json", CurrentPerson.ApiKey, trip.getId());
+                    call.enqueue(new Callback<Trip>() {
+                        @SuppressLint("SetTextI18n")
+                        @Override
+                        public void onResponse(Call<Trip> call, Response<Trip> response) {
+                            trip = response.body();
+                            String day = getString(R.string.day, Integer.toString(trip.getDay()));
+                            activate.setEnabled(false);
+                            activate.setText(day);
+                        }
+
+                        @Override
+                        public void onFailure(Call<Trip> call, Throwable t) {
+                            return;
+                        }
+                    });
                 }
+            });
+        }else{
+            String day = getString(R.string.day, Integer.toString(trip.getDay()));
+            activate.setEnabled(false);
+            activate.setText(day);
+        }
 
-                Button activate = RootView.findViewById(R.id.setToCurrent);
-
-                if(!trip.isCurrentTrip()){
-                    activate.setEnabled(true);
-                    activate.setText(R.string.setCurrent);
-                }else{
-                    String day = getString(R.string.day, Integer.toString(trip.getDay()));
-                    activate.setEnabled(false);
-                    activate.setText(day);
-                }
-
-                ListView list = RootView.findViewById(R.id.createdPartTrips);
-                CustomAdapter adapter = new CustomAdapter();
-                list.setAdapter(adapter);
-            }
-
-            @Override
-            public void onFailure(Call<Trip> call, Throwable t) {
-                return;
-            }
-        });
+        ListView list = RootView.findViewById(R.id.createdPartTrips);
+        CustomAdapter adapter = new CustomAdapter();
+        list.setAdapter(adapter);
 
         return RootView;
 
@@ -134,7 +142,7 @@ public class TripFragment extends Fragment
         @Override
         public int getCount()
         {
-          return CurrentData.trips.size();
+          return trip.getPartTrips().size();
         }
 
         @Override

@@ -125,15 +125,31 @@ public class AddCountriesToTripFragment extends Fragment
 
                                     Trip createdTrip = response.body();
 
-                                    FragmentManager fragmentManager = getFragmentManager();
-                                    Bundle args = new Bundle();
-                                    args.putParcelable("trip", createdTrip);
-                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                    TripFragment NAME = new TripFragment();
-                                    NAME.setArguments(args);
-                                    fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
-                                    fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
-                                    fragmentTransaction.commit();
+                                    RetrofitBuild retrofit = RetrofitBuild.getInstance();
+                                    Call<Trip> callCalculate = retrofit.apiService.calculate("application/json", CurrentPerson.ApiKey, createdTrip.getId(), createdTrip);
+                                    callCalculate.enqueue(new Callback<Trip>() {
+                                        @SuppressLint("SetTextI18n")
+                                        @Override
+                                        public void onResponse(Call<Trip> callCalculate, Response<Trip> response) {
+                                            Trip calculatedTrip  = response.body();
+                                            FragmentManager fragmentManager = getFragmentManager();
+                                            Bundle args = new Bundle();
+                                            args.putParcelable("trip", calculatedTrip);
+                                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                            TripFragment NAME = new TripFragment();
+                                            NAME.setArguments(args);
+                                            fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
+                                            fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
+                                            fragmentTransaction.commit();
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<Trip> callCalculate, Throwable t) {
+                                            return;
+                                        }
+                                    });
+
+
                                 }
 
                                 @Override

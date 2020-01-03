@@ -1,5 +1,8 @@
 package com.example.flow;
 
+import com.example.flow.displayClasses.LoginScreens.Login;
+
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -11,8 +14,11 @@ import static org.junit.Assert.*;
  */
 public class ExampleUnitTest {
 
+
+    Login login = new Login();
+
     @Test
-    public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
+    public void validation_is_correct() {
+        assertEquals(true, login.validate("test@test.com","Pp12"));
     }
 }

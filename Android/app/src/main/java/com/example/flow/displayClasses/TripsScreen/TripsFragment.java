@@ -145,6 +145,21 @@ public class TripsFragment extends Fragment
             }
             textViewName.setText(name);
 
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    FragmentManager fragmentManager = getFragmentManager();
+                    Bundle args = new Bundle();
+                    args.putParcelable("trip", CurrentData.trips.get(i));
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    TripFragment NAME = new TripFragment();
+                    NAME.setArguments(args);
+                    fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
+                    fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
+                    fragmentTransaction.commit();
+                }
+            });
+
             return view;
         }
     }

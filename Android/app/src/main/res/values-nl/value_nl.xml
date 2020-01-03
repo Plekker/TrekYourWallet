@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    //------General
+    <string name="AppName">Trek\nYour\nWallet</string>
+
+
+    //------Login
+    <string name="email">Email</string>
+    <string name="password">Wachtwoord</string>
+    <string name="login">Login</string>
+    <string name="noAccount">Nog geen account? Registreer</string>
+    <string name="unvalid">Ongeldige email of wachtwoord</string>
+
+    //------Register
+    <string name="name">Naam</string>
+    <string name="confirm">Bevestig</string>
+    <string name="create">Maac Account</string>
+    <string name="alreadyMember">Reeds lid? Meld aand</string>
+    <string name="mailValid">Email is reeds gebruik</string>
+
+    //------Overview
+    <string name="remaining">Overblijvend budget vandaag:</string>
+    <string name="activate">Start een trip om het budget hier na te kijken</string>
+
+    //------AddExpense
+    <string name="addExpense">Voeg uitgave Toe</string>
+    <string name="expenseName">Naam</string>
+    <string name="expensePrice">Prijs</string>
+    <string name="eur">€</string>
+
+    //------ChangePassword
+    <string name="change_password_heading">Wijzig Wachtwoord</string>
+    <string name="old_password">Oud Wachtwoord</string>
+    <string name="new_password">Nieuw Wachtwoord</string>
+    <string name="confirm_password">bevestig Wachtwoord</string>
+    <string name="done_button">Update Wachtwoord</string>
+    <string name="required">Wachtwoord is niet streng genoeg</string>
+    <string name="passwords_check">Wachtwoorden komen niet overeen</string>
+
+    //------Navigation
+    <string name="overview">Overzicht</string>
+    <string name="trips">Trips</string>
+
+    //------AddTrip
+    <string name="addTrip">Nieuwe trip</string>
+    <string name="next">Volgende</string>
+    <string name="budget">Budget</string>
+
+    //------AddCountries
+    <string name="addTCountriesTitle">Voeg landen toe</string>
+    <string name="Search">Zoek</string>
+
+    //------AddCountries
+    <string name="many">Hoeveel dagen?</string>
+    <string name="days">Dagen</string>
+
+    //------Trip
+    <string name="setCurrent">Start Trip</string>
+    <string name="day">Dag %1$s</string>
+    <string name="daysForTrip">%1$s Dagen</string>
+    <string name="budgetCreatedTrip">Budget: %1$s</string>
+    <string name="budgetSpendCreatedTrip">Budget uitgegeven: %1$s</string>
+    <string name="style0">We raden een hoger budget aan voor deze trip</string>
+    <string name="style1">Het budget is zeer laag voor deze trip</string>
+    <string name="style2">Het budget is laag voor deze trip trip</string>
+    <string name="style3">Het budget is gemiddeld voor deze trip</string>
+    <string name="style4">Het budget is bovengemiddeld voor deze trip</string>
+    <string name="style5">Het budget is zeer comfortable voor deze trip</string>
+
+
+    <string name="action_settings">Instellingen</string>
+
+    <string name="username">Gebruikersnaam</string>
+    <string name="lastname">Naam</string>
+    <string name="firstname">Naam</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+</resources>

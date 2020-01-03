@@ -46,4 +46,10 @@ public interface ApiService {
 
     @POST("api/Trips/calculate/{id}")
     Call<Trip> calculate(@Header("Content-Type") String contentType, @Header("x-api-key")String ApiKey, @Path("id") int id, @Body Trip trip);
+
+    @GET("api/Trips/setToCurrent/{id}")
+    Call<Trip> activate(@Header("Content-Type") String contentType, @Header("x-api-key")String ApiKey, @Path("id") int id);
+
+    @GET("api/Trips/currentTrip")
+    Call<Trip> getCurrentTrip(@Header("x-api-key")String ApiKey);
 }

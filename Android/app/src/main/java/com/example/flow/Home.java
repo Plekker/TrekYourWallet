@@ -95,12 +95,18 @@ public class Home extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.END);
         }
 
-        switch(currentFragment){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        switch (currentFragment) {
             case "AddCountriesToTripFragment":
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 AddTripFragment NAME = new AddTripFragment();
                 fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
+                fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
+                fragmentTransaction.commit();
+                return;
+            case "TripFragment":
+                TripsFragment tripsFragment = new TripsFragment();
+                fragmentTransaction.replace(R.id.relativelayout_for_fragment, tripsFragment);
                 fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
                 fragmentTransaction.commit();
                 return;

@@ -99,17 +99,33 @@ public class OverviewFragment extends Fragment
 
                     CurrentData.expenesForCurrenTrip = response.body();
 
-                    if(CurrentData.expenesForCurrenTrip.size() == 0){
-
-                    }
-                    CurrentData.currentTrip = CurrentData.expenesForCurrenTrip.get(0).getTrip();
-
                     TextView textView = RootView.findViewById(R.id.budgetRemaining);
-                    textView.setText(df.format(CurrentData.currentTrip.getBudgetRemainingToday()));
 
-                    ListView list = RootView.findViewById(R.id.listView);
-                    CustomAdapter adapter = new CustomAdapter();
-                    list.setAdapter(adapter);
+                    if(CurrentData.expenesForCurrenTrip.size() != 0){
+
+                        CurrentData.currentTrip = CurrentData.expenesForCurrenTrip.get(0).getTrip();
+                        textView.setText(df.format(CurrentData.currentTrip.getBudgetRemainingToday()));
+
+                        ListView list = RootView.findViewById(R.id.listView);
+                        CustomAdapter adapter = new CustomAdapter();
+                        list.setAdapter(adapter);
+                    }else{
+                        RetrofitBuild retrofit = RetrofitBuild.getInstance();
+                        Call<Trip> callTrip = retrofit.apiService.getCurrentTrip(CurrentPerson.ApiKey);
+                        callTrip.enqueue(new Callback<Trip>() {
+                            @SuppressLint("SetTextI18n")
+                            @Override
+                            public void onResponse(Call<Trip> callTrip, Response<Trip> response) {
+                                CurrentData.currentTrip = response.body();
+                                textView.setText(df.format(CurrentData.currentTrip.getBudgetRemainingToday()));
+                            }
+
+                            @Override
+                            public void onFailure(Call<Trip> callTrip, Throwable t) {
+                                return;
+                            }
+                        });
+                    }
 
 
                 }

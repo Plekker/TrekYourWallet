@@ -67,7 +67,7 @@ public class Login extends AppCompatActivity {
     }
 
     public void login() {
-        if(!validate())
+        if(!validate(_emailText.getText().toString(), _passwordText.getText().toString()))
             return;
 
         _loginButton.setEnabled(false);
@@ -118,11 +118,9 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    public boolean validate() {
+    public boolean validate(String email, String password) {
         boolean valid = true;
 
-       String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
 
         final Pattern PASSWORD_PATTERN =
                 Pattern.compile("^" +
