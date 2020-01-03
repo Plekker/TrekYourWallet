@@ -45,7 +45,13 @@
     <string name="next">Next</string>
     <string name="budget">Budget</string>
 
+    //------AddCountries
+    <string name="addTCountriesTitle">Add Countries</string>
+    <string name="Search">Search</string>
 
+    //------AddCountries
+    <string name="many">How many days?</string>
+    <string name="day">Days</string>
 
 
     <string name="action_settings">Settings</string>

@@ -1,5 +1,6 @@
 package com.example.flow.services;
 
+import com.example.flow.classes.CountryExpense;
 import com.example.flow.classes.Expense;
 import com.example.flow.classes.Person;
 import com.example.flow.classes.Trip;
@@ -36,4 +37,7 @@ public interface ApiService {
 
     @GET("api/Trips")
     Call<List<Trip>> getTrips(@Header("Content-Type") String contentType, @Header("x-api-key")String ApiKey);
+
+    @GET("api/CountryExpenses")
+    Call<List<CountryExpense>> getCountryExpenses();
 }

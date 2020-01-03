@@ -15,6 +15,11 @@ public class PartTrip {
     public PartTrip() {
     }
 
+    public PartTrip(com.example.flow.classes.CountryExpense countryExpense, int days) {
+        CountryExpense = countryExpense;
+        Days = days;
+    }
+
     public int getId() {
         return Id;
     }

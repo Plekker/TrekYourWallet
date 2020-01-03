@@ -1,8 +1,11 @@
 package com.example.flow.classes;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class CountryExpense {
+public class CountryExpense implements Parcelable {
 
     @SerializedName("id")
     private int Id;
@@ -86,5 +89,15 @@ public class CountryExpense {
 
     public void setCurrency(String currency) {
         Currency = currency;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
     }
 }

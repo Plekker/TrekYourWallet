@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Trip implements Parcelable {
     @SerializedName("id")
@@ -21,11 +23,12 @@ public class Trip implements Parcelable {
     @SerializedName("day")
     private int Day;
     @SerializedName("partTrips")
-    private PartTrip[] PartTrips;
+    private List<PartTrip> PartTrips;
     @SerializedName("budgetRemainingToday")
     private double BudgetRemainingToday;
 
     public Trip(String naam, double budget) {
+        PartTrips = new ArrayList<PartTrip>();
         Naam = naam;
         Budget = budget;
     }
@@ -78,11 +81,11 @@ public class Trip implements Parcelable {
         Day = day;
     }
 
-    public PartTrip[] getPartTrips() {
+    public List<PartTrip> getPartTrips() {
         return PartTrips;
     }
 
-    public void setPartTrips(PartTrip[] partTrips) {
+    public void setPartTrips(List<PartTrip> partTrips) {
         PartTrips = partTrips;
     }
 

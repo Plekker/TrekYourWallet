@@ -2,21 +2,36 @@
 package com.example.flow.displayClasses.TripsScreen;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.flow.R;
+import com.example.flow.classes.CountryExpense;
 import com.example.flow.classes.Trip;
-import com.example.flow.displayClasses.OverviewScreen.OverviewFragment;
+import com.example.flow.services.RetrofitBuild;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class AddCountriesToTripFragment extends Fragment
@@ -25,6 +40,8 @@ public class AddCountriesToTripFragment extends Fragment
 
     private View RootView;
     private Trip trip;
+    private List<CountryExpense> countryExpenses;
+    ArrayList<CountryExpense> filters;
     static public String createdTripName;
     static public double priceExpense;
 
@@ -55,32 +72,147 @@ public class AddCountriesToTripFragment extends Fragment
 
 
 
-        RootView = inflater.inflate(R.layout.fragment_add_expense, container, false);
+        RootView = inflater.inflate(R.layout.fragment_add_countries_to_trip, container, false);
 
-        Button ID = RootView.findViewById(R.id.toCountries);
-        ID.setOnClickListener(new View.OnClickListener() {
+        EditText search =  RootView.findViewById(R.id.search_bar);
+        ListView list = RootView.findViewById(R.id.listCountryExpenses);
+
+        RetrofitBuild retrofit = RetrofitBuild.getInstance();
+        Call<List<CountryExpense>> call = retrofit.apiService.getCountryExpenses();
+        call.enqueue(new Callback<List<CountryExpense>>() {
+            @SuppressLint("SetTextI18n")
             @Override
-            public void onClick(View view) {
-                EditText createdName = RootView.findViewById(R.id.name);
-                createdTripName = createdName.getText().toString();
-                EditText price = RootView.findViewById(R.id.budgetField);
-                priceExpense = Double.parseDouble(price.getText().toString());
+            public void onResponse(Call<List<CountryExpense>> call, Response<List<CountryExpense>> response) {
 
-                Trip trip = new Trip(createdTripName, priceExpense);
+                if(response.body().size() != 0){
+                    countryExpenses = response.body();
 
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                OverviewFragment NAME = new OverviewFragment();
-                fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
-                fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
-                Bundle args = new Bundle();
-                args.putParcelable("trip", trip);
-                fragmentTransaction.commit();
+                    CustomAdapter adapter = new CustomAdapter();
+                    list.setAdapter(adapter);
 
+                    search.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                            adapter.getFilter().filter(charSequence);
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<CountryExpense>> call, Throwable t) {
+                return;
             }
         });
 
         return RootView;
+    }
+
+
+    class CustomAdapter extends BaseAdapter implements Filterable {
+
+        private CustomFilter filter = new CustomFilter();
+        private List<CountryExpense> filteredData = countryExpenses;
+
+
+        int index;
+
+        @Override
+        public int getCount()
+        {
+            return filteredData.size();
+        }
+
+        @Override
+        public Object getItem(int position)
+        {
+            return position;
+        }
+
+        @Override
+        public long getItemId(int id)
+        {
+            return id;
+        }
+
+        public View getView(int i, View view, ViewGroup viewgroup)
+        {
+            view = getLayoutInflater().inflate(R.layout.layout_contry_expense, null);
+
+            TextView textViewName = view.findViewById(R.id.countryName);
+            String name  = filteredData.get(i).getCountry();
+            textViewName.setText(name);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    FragmentManager fragmentManager = getFragmentManager();
+                    Bundle args = new Bundle();
+                    args.putParcelable("trip", trip);
+                    args.putParcelable("country", filteredData.get(i));
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    AddPartTripFragment NAME = new AddPartTripFragment();
+                    NAME.setArguments(args);
+                    fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
+                    fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
+                    fragmentTransaction.commit();
+
+                }
+            });
+            return view;
+        }
+
+        @Override
+        public Filter getFilter() {
+            return filter;
+        }
+
+        class CustomFilter extends Filter{
+
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                FilterResults results = new FilterResults();
+
+                if(charSequence!=null && charSequence.length() > 0){
+                    String filterString = charSequence.toString().toUpperCase();
+                    final List<CountryExpense> list = countryExpenses;
+                    int count = list.size();
+
+                    final ArrayList<CountryExpense> nlist = new ArrayList<CountryExpense>(count);
+
+
+                    for (int i = 0; i<count; i++){
+                        if(list.get(i).getCountry().toUpperCase().contains(filterString)){
+                            nlist.add(countryExpenses.get(i));
+                        }
+                    }
+                    results.count = nlist.size();
+                    results.values = nlist;
+                }else{
+                    results.count = countryExpenses.size();
+                    results.values = countryExpenses;
+                }
+
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                filteredData = (ArrayList<CountryExpense>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        }
     }
 
 }
