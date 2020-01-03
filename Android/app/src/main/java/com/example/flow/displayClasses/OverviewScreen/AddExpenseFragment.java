@@ -29,13 +29,6 @@ public class AddExpenseFragment extends Fragment
 {
     private final String TAG = this.getClass().getSimpleName();
 
-    Intent intent;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
-
     private View RootView;
 
     public boolean testing = true;
@@ -46,11 +39,9 @@ public class AddExpenseFragment extends Fragment
         // Required empty public constructor
     }
 
-    public static AddExpenseFragment newInstance(String param1, String param2) {
+    public static AddExpenseFragment newInstance() {
         AddExpenseFragment fragment = new AddExpenseFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,10 +50,6 @@ public class AddExpenseFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
 
     }
 

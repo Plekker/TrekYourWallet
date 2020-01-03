@@ -1,8 +1,13 @@
 package com.example.flow.classes;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class Trip {
+import java.io.Serializable;
+
+public class Trip implements Parcelable {
     @SerializedName("id")
     private int Id;
     @SerializedName("naam")
@@ -19,6 +24,11 @@ public class Trip {
     private PartTrip[] PartTrips;
     @SerializedName("budgetRemainingToday")
     private double BudgetRemainingToday;
+
+    public Trip(String naam, double budget) {
+        Naam = naam;
+        Budget = budget;
+    }
 
     public int getId() {
         return Id;
@@ -82,5 +92,15 @@ public class Trip {
 
     public void setBudgetRemainingToday(double budgetRemainingToday) {
         BudgetRemainingToday = budgetRemainingToday;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
     }
 }

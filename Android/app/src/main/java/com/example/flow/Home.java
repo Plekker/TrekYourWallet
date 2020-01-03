@@ -140,7 +140,7 @@ public class Home extends AppCompatActivity
                 manager.popBackStack();
             } //to completly delete backstack
             manager.beginTransaction()
-                    .setCustomAnimations(R.anim.push_left_in, R.anim.push_left_out)
+                    .setCustomAnimations(R.anim.push_right_in, R.anim.push_right_out)
                     .replace(R.id.relativelayout_for_fragment,
                             tripsFragment,
                             tripsFragment.getTag()

@@ -40,6 +40,11 @@
     <string name="overview">Overview</string>
     <string name="trips">Trips</string>
 
+    //------AddTrip
+    <string name="addTrip">Add Trip</string>
+    <string name="next">Next</string>
+    <string name="budget">Budget</string>
+
 
 
 

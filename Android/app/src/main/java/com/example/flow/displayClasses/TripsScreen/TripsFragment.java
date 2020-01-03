@@ -70,7 +70,7 @@ public class TripsFragment extends Fragment
 
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                AddExpenseFragment NAME = new AddExpenseFragment();
+                AddTripFragment NAME = new AddTripFragment();
                 fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
                 fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
                 fragmentTransaction.commit();
