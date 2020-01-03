@@ -51,7 +51,20 @@
 
     //------AddCountries
     <string name="many">How many days?</string>
-    <string name="day">Days</string>
+    <string name="days">Days</string>
+
+    //------Trip
+    <string name="setCurrent">Start Trip</string>
+    <string name="day">Day %1$s</string>
+    <string name="daysForTrip">%1$s Days</string>
+    <string name="budgetCreatedTrip">Budget: %1$s</string>
+    <string name="budgetSpendCreatedTrip">Budget Spend: %1$s</string>
+    <string name="style0">We recommend a higher budget for this trip</string>
+    <string name="style1">The budget is very low for this trip</string>
+    <string name="style2">The budget is low for this trip</string>
+    <string name="style3">The budget is average for this trip</string>
+    <string name="style4">The budget is above average for this trip</string>
+    <string name="style5">The budget is very comfortable for this trip</string>
 
 
     <string name="action_settings">Settings</string>

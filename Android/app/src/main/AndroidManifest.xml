@@ -65,17 +65,6 @@
             android:name=".displayClasses.LoginScreens.Login"
             android:theme="@style/AppTheme"
             />
-        <activity
-            android:name=".displayClasses.AccountScreen.PreferenceFragmentAccount"
-            android:label="Edit account information"
-            android:theme="@style/AppTheme"/>
-
-        <activity android:name=".displayClasses.SettingsScreen.TermsAndConditions.CreateTermsAndConditions">
-            <intent-filter>
-                <action android:name=".displayClasses.TermsAndConditions.CreateTermsAndConditions"/>
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
         <activity android:name=".displayClasses.LogOutScreen.LogOut" />
 
 

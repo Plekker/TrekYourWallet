@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 
 import com.example.flow.R;
 import com.example.flow.classes.CountryExpense;
+import com.example.flow.classes.CurrentPerson;
 import com.example.flow.classes.Trip;
 import com.example.flow.services.RetrofitBuild;
 
@@ -64,7 +66,9 @@ public class AddCountriesToTripFragment extends Fragment
         if (bundle != null) {
             trip = bundle.getParcelable("trip"); // Key
         }
+
     }
+
 
     @Nullable
     @Override
@@ -74,8 +78,10 @@ public class AddCountriesToTripFragment extends Fragment
 
         RootView = inflater.inflate(R.layout.fragment_add_countries_to_trip, container, false);
 
-        EditText search =  RootView.findViewById(R.id.search_bar);
+
+        EditText search =  RootView.findViewById(R.id.createdTripBudget);
         ListView list = RootView.findViewById(R.id.listCountryExpenses);
+        Button confirm = RootView.findViewById(R.id.confirmPartTrip);
 
         RetrofitBuild retrofit = RetrofitBuild.getInstance();
         Call<List<CountryExpense>> call = retrofit.apiService.getCountryExpenses();
@@ -104,6 +110,37 @@ public class AddCountriesToTripFragment extends Fragment
                         @Override
                         public void afterTextChanged(Editable editable) {
 
+                        }
+                    });
+
+                    confirm.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            RetrofitBuild retrofit = RetrofitBuild.getInstance();
+                            Call<Trip> call = retrofit.apiService.saveTrip("application/json", CurrentPerson.ApiKey, trip);
+                            call.enqueue(new Callback<Trip>() {
+                                @SuppressLint("SetTextI18n")
+                                @Override
+                                public void onResponse(Call<Trip> call, Response<Trip> response) {
+
+                                    Trip createdTrip = response.body();
+
+                                    FragmentManager fragmentManager = getFragmentManager();
+                                    Bundle args = new Bundle();
+                                    args.putParcelable("trip", createdTrip);
+                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                    TripFragment NAME = new TripFragment();
+                                    NAME.setArguments(args);
+                                    fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
+                                    fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
+                                    fragmentTransaction.commit();
+                                }
+
+                                @Override
+                                public void onFailure(Call<Trip> call, Throwable t) {
+                                    return;
+                                }
+                            });
                         }
                     });
                 }

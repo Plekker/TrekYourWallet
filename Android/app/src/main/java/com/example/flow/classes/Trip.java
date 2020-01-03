@@ -22,6 +22,8 @@ public class Trip implements Parcelable {
     private boolean CurrentTrip;
     @SerializedName("day")
     private int Day;
+    @SerializedName("type")
+    private int Type;
     @SerializedName("partTrips")
     private List<PartTrip> PartTrips;
     @SerializedName("budgetRemainingToday")
@@ -95,6 +97,14 @@ public class Trip implements Parcelable {
 
     public void setBudgetRemainingToday(double budgetRemainingToday) {
         BudgetRemainingToday = budgetRemainingToday;
+    }
+
+    public int getType() {
+        return Type;
+    }
+
+    public void setType(int type) {
+        Type = type;
     }
 
     @Override

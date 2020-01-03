@@ -5,19 +5,22 @@ import com.google.gson.annotations.SerializedName;
 public class PartTrip {
     @SerializedName("id")
     private int Id;
-    @SerializedName("countryExpense")
+    @SerializedName("expensecountry")
     private CountryExpense CountryExpense;
     @SerializedName("days")
     private int Days;
     @SerializedName("budgetPerDay")
     private double BudgetPerDay;
+    @SerializedName("order")
+    private int Order;
 
     public PartTrip() {
     }
 
-    public PartTrip(com.example.flow.classes.CountryExpense countryExpense, int days) {
+    public PartTrip(com.example.flow.classes.CountryExpense countryExpense, int days, int order) {
         CountryExpense = countryExpense;
-        Days = days;
+        this.Days = days;
+        this.Order = order;
     }
 
     public int getId() {
@@ -51,4 +54,14 @@ public class PartTrip {
     public void setBudgetPerDay(double budgetPerDay) {
         BudgetPerDay = budgetPerDay;
     }
+
+    public int getOrder() {
+        return Order;
+    }
+
+    public void setOrder(int order) {
+        Order = order;
+    }
+
+
 }

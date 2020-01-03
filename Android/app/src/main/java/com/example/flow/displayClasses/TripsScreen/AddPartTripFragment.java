@@ -66,7 +66,9 @@ public class AddPartTripFragment extends Fragment
                 EditText days = RootView.findViewById(R.id.setDays);
                 daysPerCountry = Integer.parseInt(days.getText().toString());
 
-                trip.getPartTrips().add(new PartTrip(country, daysPerCountry));
+                int order = trip.getPartTrips().size() + 1;
+
+                trip.getPartTrips().add(new PartTrip(country, daysPerCountry, order));
 
                 FragmentManager fragmentManager = getFragmentManager();
                 Bundle args = new Bundle();

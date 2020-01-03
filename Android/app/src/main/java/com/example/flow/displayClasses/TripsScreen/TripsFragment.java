@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.example.flow.R;
 import com.example.flow.classes.CurrentPerson;
 import com.example.flow.classes.Trip;
-import com.example.flow.displayClasses.OverviewScreen.AddExpenseFragment;
 import com.example.flow.services.CurrentData;
 import com.example.flow.services.RetrofitBuild;
 

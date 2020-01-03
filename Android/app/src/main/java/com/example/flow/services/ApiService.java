@@ -40,4 +40,10 @@ public interface ApiService {
 
     @GET("api/CountryExpenses")
     Call<List<CountryExpense>> getCountryExpenses();
+
+    @POST("api/Trips")
+    Call<Trip> saveTrip(@Header("Content-Type") String contentType, @Header("x-api-key")String ApiKey, @Body Trip trip);
+
+    @POST("api/Trips/calculate/{id}")
+    Call<Trip> calculate(@Header("Content-Type") String contentType, @Header("x-api-key")String ApiKey, @Path("id") int id, @Body Trip trip);
 }

@@ -2,6 +2,8 @@ package com.example.flow;
 
 import android.content.Intent;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,9 +15,9 @@ import android.view.Gravity;
 
 import com.example.flow.classes.CurrentPerson;
 import com.example.flow.classes.Person;
-import com.example.flow.displayClasses.OverviewScreen.OverviewFragment;
 import com.example.flow.displayClasses.LogOutScreen.LogOut;
 import com.example.flow.displayClasses.ChangePassword.ChangePasswordFragment;
+import com.example.flow.displayClasses.TripsScreen.AddTripFragment;
 import com.example.flow.displayClasses.TripsScreen.TripsFragment;
 
 import android.support.design.widget.NavigationView;
@@ -23,12 +25,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class Home extends AppCompatActivity
         implements
         NavigationView.OnNavigationItemSelectedListener,
         ChangePasswordFragment.OnFragmentInteractionListener,
         BottomNavigationView.OnNavigationItemSelectedListener
 {
+
+    FragmentManager manager;
+    String currentFragment;
 
     DrawerLayout drawer;
 
@@ -60,7 +67,15 @@ public class Home extends AppCompatActivity
 
 
         com.example.flow.displayClasses.OverviewScreen.OverviewFragment overviewFragment = new com.example.flow.displayClasses.OverviewScreen.OverviewFragment();
-        FragmentManager manager = getSupportFragmentManager();
+        manager = getSupportFragmentManager();
+        manager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                List<Fragment> f = manager.getFragments();
+                Fragment frag = f.get(0);
+                currentFragment = frag.getClass().getSimpleName();
+            }
+        });
         manager.beginTransaction().replace(
                 R.id.relativelayout_for_fragment,
                 overviewFragment,
@@ -78,10 +93,20 @@ public class Home extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.END)) {
             drawer.closeDrawer(GravityCompat.END);
-        } else {
-            super.onBackPressed();
         }
 
+        switch(currentFragment){
+            case "AddCountriesToTripFragment":
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                AddTripFragment NAME = new AddTripFragment();
+                fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
+                fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
+                fragmentTransaction.commit();
+                return;
+            default:
+                manager.popBackStack();
+        }
     }
 
     @Override
