@@ -52,4 +52,7 @@ public interface ApiService {
 
     @GET("api/Trips/currentTrip")
     Call<Trip> getCurrentTrip(@Header("x-api-key")String ApiKey);
+
+    @GET("api/Account/logout")
+    Call<ResponseBody> logout(@Header("x-api-key")String ApiKey);
 }

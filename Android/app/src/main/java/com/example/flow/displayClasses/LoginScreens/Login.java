@@ -9,9 +9,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.room.Room;
+
 import com.example.flow.Home;
 import com.example.flow.R;
 import com.example.flow.classes.Person;
+import com.example.flow.classes.PersonDto;
+import com.example.flow.services.AppDatabase;
+import com.example.flow.services.PersonDao;
 import com.example.flow.services.RetrofitBuild;
 
 import java.io.FileOutputStream;
@@ -87,7 +92,9 @@ public class Login extends AppCompatActivity {
                     return;
                 }
 
-                SaveApiKey(personIn.getApiKey());
+                AppDatabase db = getDb();
+                PersonDao personDao = getDb().personDao();
+                personDao.insertAll(new PersonDto(personIn.getApiKey()));
 
                 Intent intent = new Intent(Login.this, Home.class);
                 intent.putExtra("Person", personIn);
@@ -104,18 +111,11 @@ public class Login extends AppCompatActivity {
         });
     }
 
-    private void SaveApiKey(String apiKey){
-        String filename = "apiKey";
-        FileOutputStream outputStream;
-        String fileContents = apiKey;
-
-        try {
-            outputStream = getApplicationContext().openFileOutput(filename, Context.MODE_PRIVATE);
-            outputStream.write(fileContents.getBytes());
-            outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private AppDatabase getDb(){
+        return Room.databaseBuilder(getBaseContext().getApplicationContext(), AppDatabase.class, "poerson")
+                .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
+                .build();
     }
 
     public boolean validate(String email, String password) {

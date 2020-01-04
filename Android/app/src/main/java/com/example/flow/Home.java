@@ -15,17 +15,29 @@ import android.view.Gravity;
 
 import com.example.flow.classes.CurrentPerson;
 import com.example.flow.classes.Person;
+import com.example.flow.classes.PersonDto;
 import com.example.flow.displayClasses.LogOutScreen.LogOut;
 import com.example.flow.displayClasses.ChangePassword.ChangePasswordFragment;
+import com.example.flow.displayClasses.LoginScreens.Login;
 import com.example.flow.displayClasses.TripsScreen.AddTripFragment;
 import com.example.flow.displayClasses.TripsScreen.TripsFragment;
+import com.example.flow.services.AppDatabase;
+import com.example.flow.services.PersonDao;
+import com.example.flow.services.RetrofitBuild;
 
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
+import androidx.room.Room;
+
 import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Home extends AppCompatActivity
         implements
@@ -163,6 +175,21 @@ public class Home extends AppCompatActivity
                     ).commit();
 
         }
+        else if(id == R.id.nav_logout){
+            RetrofitBuild retrofit = RetrofitBuild.getInstance();
+            Call<ResponseBody> call = retrofit.apiService.logout(CurrentPerson.ApiKey);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    deleteApiKey();
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    deleteApiKey();
+                }
+            });
+        }
         else if (id == R.id.trips) {
 
             TripsFragment tripsFragment = new TripsFragment();
@@ -214,6 +241,24 @@ public class Home extends AppCompatActivity
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
+    }
+
+    private void deleteApiKey(){
+        AppDatabase db = getDb();
+        PersonDao personDao = getDb().personDao();
+        List<PersonDto> personDtos = personDao.getAll();
+        personDao.delete(personDtos.get(0));
+
+        Intent homeIntent = new Intent(Home.this, Login.class);
+        startActivity(homeIntent);
+        finish();
+    }
+
+    private AppDatabase getDb(){
+        return Room.databaseBuilder(getBaseContext().getApplicationContext(), AppDatabase.class, "poerson")
+                .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
+                .build();
     }
 }
 
