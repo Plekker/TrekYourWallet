@@ -17,6 +17,7 @@ import com.example.flow.R;
 import com.example.flow.classes.CountryExpense;
 import com.example.flow.classes.PartTrip;
 import com.example.flow.classes.Trip;
+import com.example.flow.services.Empty;
 
 
 public class AddPartTripFragment extends Fragment
@@ -64,22 +65,24 @@ public class AddPartTripFragment extends Fragment
             @Override
             public void onClick(View view) {
                 EditText days = RootView.findViewById(R.id.setDays);
-                daysPerCountry = Integer.parseInt(days.getText().toString());
 
-                int order = trip.getPartTrips().size() + 1;
+                if(Empty.isImputNotEmpty(days.toString())){
+                    daysPerCountry = Integer.parseInt(days.getText().toString());
 
-                trip.getPartTrips().add(new PartTrip(country, daysPerCountry, order));
+                    int order = trip.getPartTrips().size() + 1;
 
-                FragmentManager fragmentManager = getFragmentManager();
-                Bundle args = new Bundle();
-                args.putParcelable("trip", trip);
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                AddCountriesToTripFragment NAME = new AddCountriesToTripFragment();
-                NAME.setArguments(args);
-                fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
-                fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
-                fragmentTransaction.commit();
+                    trip.getPartTrips().add(new PartTrip(country, daysPerCountry, order));
 
+                    FragmentManager fragmentManager = getFragmentManager();
+                    Bundle args = new Bundle();
+                    args.putParcelable("trip", trip);
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    AddCountriesToTripFragment NAME = new AddCountriesToTripFragment();
+                    NAME.setArguments(args);
+                    fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
+                    fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
+                    fragmentTransaction.commit();
+                }
             }
         });
 

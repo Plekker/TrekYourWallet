@@ -1,6 +1,7 @@
 package com.example.flow;
 
 import com.example.flow.displayClasses.LoginScreens.Login;
+import com.example.flow.services.Empty;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,11 +15,10 @@ import static org.junit.Assert.*;
  */
 public class ExampleUnitTest {
 
-
-    Login login = new Login();
-
     @Test
     public void validation_is_correct() {
-        assertEquals(true, login.validate("test@test.com","Pp12"));
+        assertTrue(Empty.isImputNotEmpty("dfghj"));
+        assertEquals(false, Empty.isImputNotEmpty(null));
+        assertEquals(false, Empty.isImputNotEmpty(""));
     }
 }

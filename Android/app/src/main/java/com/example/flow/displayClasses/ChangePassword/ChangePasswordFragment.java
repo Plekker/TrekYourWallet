@@ -19,7 +19,6 @@ import android.widget.EditText;
 
 import com.example.flow.R;
 import com.example.flow.classes.CurrentPerson;
-import com.example.flow.displayClasses.AccountScreen.AccountFragment;
 import com.example.flow.displayClasses.OverviewScreen.OverviewFragment;
 import com.example.flow.services.ChangePasswordInfo;
 import com.example.flow.services.RetrofitBuild;
@@ -47,7 +46,6 @@ public class ChangePasswordFragment extends Fragment {
     private Activity mActivity;
     private SharedPreferences mSharedPreferences;
     private View mView;
-    private static final String LOG_TAG = AccountFragment.class.getSimpleName();
 
     public ChangePasswordFragment() {
         // Required empty public constructor
