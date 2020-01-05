@@ -50,7 +50,8 @@
         <activity
             android:name=".Home"
             android:parentActivityName=".displayClasses.LoginScreens.Login"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:noHistory="true">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".displayClasses.LoginScreens.Login" />
