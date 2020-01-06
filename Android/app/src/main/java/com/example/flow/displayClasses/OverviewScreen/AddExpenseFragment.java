@@ -18,6 +18,7 @@ import com.example.flow.R;
 import com.example.flow.classes.CurrentPerson;
 import com.example.flow.classes.Expense;
 import com.example.flow.services.CurrentData;
+import com.example.flow.services.Empty;
 import com.example.flow.services.RetrofitBuild;
 
 import retrofit2.Call;
@@ -66,39 +67,42 @@ public class AddExpenseFragment extends Fragment
             @Override
             public void onClick(View view) {
                 EditText createdName = RootView.findViewById(R.id.name);
-                createdExpenseName = createdName.getText().toString();
                 EditText price = RootView.findViewById(R.id.priceAddExpense);
-                priceExpense = Double.parseDouble(price.getText().toString());
 
-                RetrofitBuild retrofit = RetrofitBuild.getInstance();
-                Call<Expense> call = retrofit.apiService.addExpense("application/json", CurrentPerson.ApiKey, CurrentData.currentTrip.getId(), new Expense(createdExpenseName, priceExpense, "EUR", CurrentData.currentTrip));
-                call.enqueue(new Callback<Expense>() {
-                    @Override
-                    public void onResponse(Call<Expense> call, Response<Expense> response) {
-                        CurrentData.currentTrip = response.body().getTrip();
-                        CurrentData.expenesForCurrenTrip.add(response.body());
+                if(Empty.isImputNotEmpty(createdName.getText().toString()) && Empty.isImputNotEmpty(price.getText().toString())){
+                    priceExpense = Double.parseDouble(price.getText().toString());
+                    createdExpenseName = createdName.getText().toString();
 
-                        FragmentManager fragmentManager = getFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        OverviewFragment NAME = new OverviewFragment();
-                        fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
-                        fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
-                        fragmentTransaction.commit();
-                    }
 
-                    @Override
-                    public void onFailure(Call<Expense> call, Throwable t) {
-                        return;
-                    }
-                });
+                    RetrofitBuild retrofit = RetrofitBuild.getInstance();
+                    Call<Expense> call = retrofit.apiService.addExpense("application/json", CurrentPerson.ApiKey, CurrentData.currentTrip.getId(), new Expense(createdExpenseName, priceExpense, "EUR", CurrentData.currentTrip));
+                    call.enqueue(new Callback<Expense>() {
+                        @Override
+                        public void onResponse(Call<Expense> call, Response<Expense> response) {
+                            CurrentData.currentTrip = response.body().getTrip();
+                            CurrentData.expenesForCurrenTrip.add(response.body());
 
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                OverviewFragment NAME = new OverviewFragment();
-                fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
-                fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
-                fragmentTransaction.commit();
+                            FragmentManager fragmentManager = getFragmentManager();
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            OverviewFragment NAME = new OverviewFragment();
+                            fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
+                            fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
+                            fragmentTransaction.commit();
+                        }
 
+                        @Override
+                        public void onFailure(Call<Expense> call, Throwable t) {
+                            return;
+                        }
+                    });
+
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    OverviewFragment NAME = new OverviewFragment();
+                    fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
+                    fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
+                    fragmentTransaction.commit();
+                }
             }
         });
 

@@ -66,7 +66,7 @@ public class AddPartTripFragment extends Fragment
             public void onClick(View view) {
                 EditText days = RootView.findViewById(R.id.setDays);
 
-                if(Empty.isImputNotEmpty(days.toString())){
+                if(Empty.isImputNotEmpty(days.getText().toString())){
                     daysPerCountry = Integer.parseInt(days.getText().toString());
 
                     int order = trip.getPartTrips().size() + 1;

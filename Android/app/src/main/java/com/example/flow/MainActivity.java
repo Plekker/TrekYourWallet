@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity
 							@Override
 							public void run()
 							{
+								personDao.delete(personDtos.get(0));
+
 								Intent homeIntent = new Intent(MainActivity.this, Login.class);
 								startActivity(homeIntent);
 								finish();
