@@ -1,5 +1,9 @@
 package com.example.flow.services;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -30,4 +34,6 @@ public class RetrofitBuild {
 
         return retrofitBuild;
     }
+
+
 }

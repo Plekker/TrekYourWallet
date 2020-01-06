@@ -2,6 +2,7 @@ package com.example.flow.displayClasses.TripsScreen;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,10 +16,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.flow.R;
 import com.example.flow.classes.CurrentPerson;
 import com.example.flow.classes.Trip;
+import com.example.flow.services.CheckInternet;
 import com.example.flow.services.CurrentData;
 import com.example.flow.services.RetrofitBuild;
 
@@ -76,33 +79,41 @@ public class TripsFragment extends Fragment
 
             }
         });
+        if(CheckInternet.checkInternet(getActivity().getApplicationContext())){
+            RetrofitBuild retrofit = RetrofitBuild.getInstance();
+            Call<List<Trip>> call = retrofit.apiService.getTrips("application/json", CurrentPerson.ApiKey);
+            call.enqueue(new Callback<List<Trip>>() {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onResponse(Call<List<Trip>> call, Response<List<Trip>> response) {
 
-        RetrofitBuild retrofit = RetrofitBuild.getInstance();
-        Call<List<Trip>> call = retrofit.apiService.getTrips("application/json", CurrentPerson.ApiKey);
-        call.enqueue(new Callback<List<Trip>>() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onResponse(Call<List<Trip>> call, Response<List<Trip>> response) {
+                    if(response.body().size() == 0){
 
-                if(response.body().size() == 0){
+                    }
+                    else{
 
+                        CurrentData.trips = response.body();
+
+
+                        ListView list = RootView.findViewById(R.id.tripsList);
+                        CustomAdapter adapter = new CustomAdapter();
+                        list.setAdapter(adapter);
+                    }
                 }
-                else{
 
-                    CurrentData.trips = response.body();
-
-
-                    ListView list = RootView.findViewById(R.id.tripsList);
-                    CustomAdapter adapter = new CustomAdapter();
-                    list.setAdapter(adapter);
+                @Override
+                public void onFailure(Call<List<Trip>> call, Throwable t) {
+                    return;
                 }
-            }
+            });
+        }else{
+            Context context = getActivity().getApplicationContext();
+            CharSequence text = getActivity().getApplicationContext().getResources().getString(R.string.internetConnectie);
+            int duration = Toast.LENGTH_SHORT;
 
-            @Override
-            public void onFailure(Call<List<Trip>> call, Throwable t) {
-                return;
-            }
-        });
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        }
 
 
 

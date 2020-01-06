@@ -1,6 +1,7 @@
 package com.example.flow.displayClasses.LoginScreens;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.flow.R;
 import com.example.flow.classes.Person;
+import com.example.flow.services.CheckInternet;
 import com.example.flow.services.RetrofitBuild;
 
 import java.util.regex.Pattern;
@@ -77,48 +79,59 @@ public class activity_register extends AppCompatActivity {
 
         Person person = new Person(_name.getText().toString(), _password.getText().toString(), _email.getText().toString());
 
-        RetrofitBuild retrofit = RetrofitBuild.getInstance();
-        Call<ResponseBody> call = retrofit.apiService.register("application/json", person);
+        if(CheckInternet.checkInternet(getApplicationContext())){
+            RetrofitBuild retrofit = RetrofitBuild.getInstance();
+            Call<ResponseBody> call = retrofit.apiService.register("application/json", person);
 
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.code() == 400){
-                    _mailValid.setText(R.string.mailValid);
-                    _signupButton.setEnabled(true);
-                    return;
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if(response.code() == 400){
+                        _mailValid.setText(R.string.mailValid);
+                        _signupButton.setEnabled(true);
+                        return;
+                    }
+
+                    final ProgressDialog progressDialog = new ProgressDialog(activity_register.this,
+                            R.style.AppTheme_Dark_Dialog);
+                    progressDialog.setIndeterminate(true);
+                    progressDialog.setMessage("Creating Account...");
+                    progressDialog.show();
+
+                    String username = _name.getText().toString();
+                    String email = _email.getText().toString();
+                    String password = _password.getText().toString();
+                    String reEnterPassword = _reenterpassword.getText().toString();
+
+                    // TODO: Implement your own signup logic here.
+
+                    new android.os.Handler().postDelayed(
+                            new Runnable() {
+                                public void run() {
+                                    // On complete call either onSignupSuccess or onSignupFailed
+                                    // depending on success
+                                    onSignupSuccess();
+                                    // onSignupFailed();
+                                    progressDialog.dismiss();
+                                }
+                            }, 3000);
                 }
 
-                final ProgressDialog progressDialog = new ProgressDialog(activity_register.this,
-                        R.style.AppTheme_Dark_Dialog);
-                progressDialog.setIndeterminate(true);
-                progressDialog.setMessage("Creating Account...");
-                progressDialog.show();
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    return;
+                }
+            });
+        }else{
+            Context context = getApplicationContext();
+            CharSequence text = getApplicationContext().getResources().getString(R.string.internetConnectie);
+            int duration = Toast.LENGTH_SHORT;
 
-                String username = _name.getText().toString();
-                String email = _email.getText().toString();
-                String password = _password.getText().toString();
-                String reEnterPassword = _reenterpassword.getText().toString();
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        }
 
-                // TODO: Implement your own signup logic here.
 
-                new android.os.Handler().postDelayed(
-                        new Runnable() {
-                            public void run() {
-                                // On complete call either onSignupSuccess or onSignupFailed
-                                // depending on success
-                                onSignupSuccess();
-                                // onSignupFailed();
-                                progressDialog.dismiss();
-                            }
-                        }, 3000);
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                return;
-            }
-        });
 
 
     }

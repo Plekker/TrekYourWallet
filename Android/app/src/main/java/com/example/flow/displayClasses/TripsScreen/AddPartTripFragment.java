@@ -82,6 +82,9 @@ public class AddPartTripFragment extends Fragment
                     fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
                     fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
                     fragmentTransaction.commit();
+                }else{
+                    CharSequence cs = getActivity().getApplicationContext().getResources().getString(R.string.errorMessage);
+                    days.setError(cs);
                 }
             }
         });

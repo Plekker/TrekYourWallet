@@ -2,6 +2,7 @@ package com.example.flow.displayClasses.OverviewScreen;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.support.v4.app.FragmentManager;
 
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import com.example.flow.classes.CurrentPerson;
 import com.example.flow.classes.Expense;
 import com.example.flow.classes.Trip;
+import com.example.flow.services.CheckInternet;
 import com.example.flow.services.CurrentData;
 import com.example.flow.services.RetrofitBuild;
 
@@ -29,6 +31,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -84,58 +87,69 @@ public class OverviewFragment extends Fragment
             }
         });
 
-        RetrofitBuild retrofit = RetrofitBuild.getInstance();
-        Call<List<Expense>> call = retrofit.apiService.getExpensesForCurrentTrip("application/json", CurrentPerson.ApiKey);
-        call.enqueue(new Callback<List<Expense>>() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onResponse(Call<List<Expense>> call, Response<List<Expense>> response) {
+        if(CheckInternet.checkInternet(getActivity().getApplicationContext())){
+            RetrofitBuild retrofit = RetrofitBuild.getInstance();
+            Call<List<Expense>> call = retrofit.apiService.getExpensesForCurrentTrip("application/json", CurrentPerson.ApiKey);
+            call.enqueue(new Callback<List<Expense>>() {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onResponse(Call<List<Expense>> call, Response<List<Expense>> response) {
 
-                if(response.code() == 404){
-                    TextView textView = RootView.findViewById(R.id.remaining);
-                    textView.setText(R.string.activate);
-                }
-                else{
-
-                    CurrentData.expenesForCurrenTrip = response.body();
-
-                    TextView textView = RootView.findViewById(R.id.budgetRemaining);
-
-                    if(CurrentData.expenesForCurrenTrip.size() != 0){
-
-                        CurrentData.currentTrip = CurrentData.expenesForCurrenTrip.get(0).getTrip();
-                        textView.setText(df.format(CurrentData.currentTrip.getBudgetRemainingToday()));
-
-                        ListView list = RootView.findViewById(R.id.listView);
-                        CustomAdapter adapter = new CustomAdapter();
-                        list.setAdapter(adapter);
-                    }else{
-                        RetrofitBuild retrofit = RetrofitBuild.getInstance();
-                        Call<Trip> callTrip = retrofit.apiService.getCurrentTrip(CurrentPerson.ApiKey);
-                        callTrip.enqueue(new Callback<Trip>() {
-                            @SuppressLint("SetTextI18n")
-                            @Override
-                            public void onResponse(Call<Trip> callTrip, Response<Trip> response) {
-                                CurrentData.currentTrip = response.body();
-                                textView.setText(df.format(CurrentData.currentTrip.getBudgetRemainingToday()));
-                            }
-
-                            @Override
-                            public void onFailure(Call<Trip> callTrip, Throwable t) {
-                                return;
-                            }
-                        });
+                    if(response.code() == 404){
+                        TextView textView = RootView.findViewById(R.id.remaining);
+                        textView.setText(R.string.activate);
                     }
+                    else{
+
+                        CurrentData.expenesForCurrenTrip = response.body();
+
+                        TextView textView = RootView.findViewById(R.id.budgetRemaining);
+
+                        if(CurrentData.expenesForCurrenTrip.size() != 0){
+
+                            CurrentData.currentTrip = CurrentData.expenesForCurrenTrip.get(0).getTrip();
+                            textView.setText(df.format(CurrentData.currentTrip.getBudgetRemainingToday()));
+
+                            ListView list = RootView.findViewById(R.id.listView);
+                            CustomAdapter adapter = new CustomAdapter();
+                            list.setAdapter(adapter);
+                        }else{
+                            RetrofitBuild retrofit = RetrofitBuild.getInstance();
+                            Call<Trip> callTrip = retrofit.apiService.getCurrentTrip(CurrentPerson.ApiKey);
+                            callTrip.enqueue(new Callback<Trip>() {
+                                @SuppressLint("SetTextI18n")
+                                @Override
+                                public void onResponse(Call<Trip> callTrip, Response<Trip> response) {
+                                    CurrentData.currentTrip = response.body();
+                                    textView.setText(df.format(CurrentData.currentTrip.getBudgetRemainingToday()));
+                                }
+
+                                @Override
+                                public void onFailure(Call<Trip> callTrip, Throwable t) {
+                                    return;
+                                }
+                            });
+                        }
 
 
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<Expense>> call, Throwable t) {
-                return;
-            }
-        });
+                @Override
+                public void onFailure(Call<List<Expense>> call, Throwable t) {
+                    return;
+                }
+            });
+        }else{
+            Context context = getActivity().getApplicationContext();
+            CharSequence text = getActivity().getApplicationContext().getResources().getString(R.string.internetConnectie);
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        }
+
+
 
 
 

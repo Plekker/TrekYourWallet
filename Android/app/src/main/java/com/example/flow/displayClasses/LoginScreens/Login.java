@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.room.Room;
 
@@ -16,6 +17,7 @@ import com.example.flow.R;
 import com.example.flow.classes.Person;
 import com.example.flow.classes.PersonDto;
 import com.example.flow.services.AppDatabase;
+import com.example.flow.services.CheckInternet;
 import com.example.flow.services.PersonDao;
 import com.example.flow.services.RetrofitBuild;
 
@@ -78,37 +80,49 @@ public class Login extends AppCompatActivity {
         _loginButton.setEnabled(false);
         _person = new Person(_passwordText.getText().toString(), _emailText.getText().toString());
 
-        RetrofitBuild retrofit = RetrofitBuild.getInstance();
-        Call<Person> call = retrofit.apiService.getApiKey("application/json", _person);
-        call.enqueue(new Callback<Person>() {
-            @Override
-            public void onResponse(Call<Person> call, Response<Person> response) {
+        if(CheckInternet.checkInternet(getApplicationContext())){
+            RetrofitBuild retrofit = RetrofitBuild.getInstance();
+            Call<Person> call = retrofit.apiService.getApiKey("application/json", _person);
+            call.enqueue(new Callback<Person>() {
+                @Override
+                public void onResponse(Call<Person> call, Response<Person> response) {
 
-                Person personIn = response.body();
+                    Person personIn = response.body();
 
-                if(personIn == null){
-                    _loginButton.setEnabled(true);
-                    _signinattempts.setText(R.string.unvalid);
-                    return;
+                    if(personIn == null){
+                        _loginButton.setEnabled(true);
+                        _signinattempts.setText(R.string.unvalid);
+                        return;
+                    }
+
+                    AppDatabase db = getDb();
+                    PersonDao personDao = getDb().personDao();
+                    personDao.insertAll(new PersonDto(personIn.getApiKey()));
+
+                    Intent intent = new Intent(Login.this, Home.class);
+                    intent.putExtra("Person", personIn);
+                    startActivity(intent);
                 }
 
-                AppDatabase db = getDb();
-                PersonDao personDao = getDb().personDao();
-                personDao.insertAll(new PersonDto(personIn.getApiKey()));
+                @Override
+                public void onFailure(Call<Person> call, Throwable t) {
+                    counter--;
+                    _signinattempts.setText("No of attempts remaining: "+ String.valueOf(counter));
+                    if(counter==0) { _loginButton.setEnabled(false); }
+                    return;
+                }
+            });
+        }else{
+            Context context = getApplicationContext();
+            CharSequence text = getApplicationContext().getResources().getString(R.string.internetConnectie);
+            int duration = Toast.LENGTH_SHORT;
 
-                Intent intent = new Intent(Login.this, Home.class);
-                intent.putExtra("Person", personIn);
-                startActivity(intent);
-            }
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
 
-            @Override
-            public void onFailure(Call<Person> call, Throwable t) {
-                counter--;
-                _signinattempts.setText("No of attempts remaining: "+ String.valueOf(counter));
-                if(counter==0) { _loginButton.setEnabled(false); }
-                return;
-            }
-        });
+            _loginButton.setEnabled(true);
+
+        }
     }
 
     private AppDatabase getDb(){

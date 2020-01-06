@@ -3,6 +3,7 @@ package com.example.flow.displayClasses.TripsScreen;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,11 +22,13 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.flow.R;
 import com.example.flow.classes.CountryExpense;
 import com.example.flow.classes.CurrentPerson;
 import com.example.flow.classes.Trip;
+import com.example.flow.services.CheckInternet;
 import com.example.flow.services.RetrofitBuild;
 
 import java.util.ArrayList;
@@ -83,91 +86,103 @@ public class AddCountriesToTripFragment extends Fragment
         ListView list = RootView.findViewById(R.id.listCountryExpenses);
         Button confirm = RootView.findViewById(R.id.confirmPartTrip);
 
-        RetrofitBuild retrofit = RetrofitBuild.getInstance();
-        Call<List<CountryExpense>> call = retrofit.apiService.getCountryExpenses();
-        call.enqueue(new Callback<List<CountryExpense>>() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onResponse(Call<List<CountryExpense>> call, Response<List<CountryExpense>> response) {
 
-                if(response.body().size() != 0){
-                    countryExpenses = response.body();
+        if(CheckInternet.checkInternet(getActivity().getApplicationContext())){
+            RetrofitBuild retrofit = RetrofitBuild.getInstance();
+            Call<List<CountryExpense>> call = retrofit.apiService.getCountryExpenses();
+            call.enqueue(new Callback<List<CountryExpense>>() {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onResponse(Call<List<CountryExpense>> call, Response<List<CountryExpense>> response) {
 
-                    CustomAdapter adapter = new CustomAdapter();
-                    list.setAdapter(adapter);
+                    if(response.body().size() != 0){
+                        countryExpenses = response.body();
 
-                    search.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        CustomAdapter adapter = new CustomAdapter();
+                        list.setAdapter(adapter);
 
-                        }
+                        search.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                        @Override
-                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                            adapter.getFilter().filter(charSequence);
-                        }
+                            }
 
-                        @Override
-                        public void afterTextChanged(Editable editable) {
+                            @Override
+                            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                                adapter.getFilter().filter(charSequence);
+                            }
 
-                        }
-                    });
+                            @Override
+                            public void afterTextChanged(Editable editable) {
 
-                    confirm.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            RetrofitBuild retrofit = RetrofitBuild.getInstance();
-                            Call<Trip> call = retrofit.apiService.saveTrip("application/json", CurrentPerson.ApiKey, trip);
-                            call.enqueue(new Callback<Trip>() {
-                                @SuppressLint("SetTextI18n")
-                                @Override
-                                public void onResponse(Call<Trip> call, Response<Trip> response) {
+                            }
+                        });
 
-                                    Trip createdTrip = response.body();
+                        confirm.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                RetrofitBuild retrofit = RetrofitBuild.getInstance();
+                                Call<Trip> call = retrofit.apiService.saveTrip("application/json", CurrentPerson.ApiKey, trip);
+                                call.enqueue(new Callback<Trip>() {
+                                    @SuppressLint("SetTextI18n")
+                                    @Override
+                                    public void onResponse(Call<Trip> call, Response<Trip> response) {
 
-                                    RetrofitBuild retrofit = RetrofitBuild.getInstance();
-                                    Call<Trip> callCalculate = retrofit.apiService.calculate("application/json", CurrentPerson.ApiKey, createdTrip.getId(), createdTrip);
-                                    callCalculate.enqueue(new Callback<Trip>() {
-                                        @SuppressLint("SetTextI18n")
-                                        @Override
-                                        public void onResponse(Call<Trip> callCalculate, Response<Trip> response) {
-                                            Trip calculatedTrip  = response.body();
-                                            FragmentManager fragmentManager = getFragmentManager();
-                                            Bundle args = new Bundle();
-                                            args.putParcelable("trip", calculatedTrip);
-                                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                            TripFragment NAME = new TripFragment();
-                                            NAME.setArguments(args);
-                                            fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
-                                            fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
-                                            fragmentTransaction.commit();
-                                        }
+                                        Trip createdTrip = response.body();
 
-                                        @Override
-                                        public void onFailure(Call<Trip> callCalculate, Throwable t) {
-                                            return;
-                                        }
-                                    });
+                                        RetrofitBuild retrofit = RetrofitBuild.getInstance();
+                                        Call<Trip> callCalculate = retrofit.apiService.calculate("application/json", CurrentPerson.ApiKey, createdTrip.getId(), createdTrip);
+                                        callCalculate.enqueue(new Callback<Trip>() {
+                                            @SuppressLint("SetTextI18n")
+                                            @Override
+                                            public void onResponse(Call<Trip> callCalculate, Response<Trip> response) {
+                                                Trip calculatedTrip  = response.body();
+                                                FragmentManager fragmentManager = getFragmentManager();
+                                                Bundle args = new Bundle();
+                                                args.putParcelable("trip", calculatedTrip);
+                                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                                TripFragment NAME = new TripFragment();
+                                                NAME.setArguments(args);
+                                                fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
+                                                fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
+                                                fragmentTransaction.commit();
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<Trip> callCalculate, Throwable t) {
+                                                return;
+                                            }
+                                        });
 
 
-                                }
+                                    }
 
-                                @Override
-                                public void onFailure(Call<Trip> call, Throwable t) {
-                                    return;
-                                }
-                            });
-                        }
-                    });
+                                    @Override
+                                    public void onFailure(Call<Trip> call, Throwable t) {
+                                        return;
+                                    }
+                                });
+                            }
+                        });
+                    }
+
                 }
 
-            }
+                @Override
+                public void onFailure(Call<List<CountryExpense>> call, Throwable t) {
+                    return;
+                }
+            });
+        }else{
+            Context context = getActivity().getApplicationContext();
+            CharSequence text = getActivity().getApplicationContext().getResources().getString(R.string.internetConnectie);
+            int duration = Toast.LENGTH_SHORT;
 
-            @Override
-            public void onFailure(Call<List<CountryExpense>> call, Throwable t) {
-                return;
-            }
-        });
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        }
+
+
 
         return RootView;
     }

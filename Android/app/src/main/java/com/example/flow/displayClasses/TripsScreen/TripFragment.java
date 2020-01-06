@@ -2,6 +2,7 @@ package com.example.flow.displayClasses.TripsScreen;
 
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,10 +17,12 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.flow.R;
 import com.example.flow.classes.CurrentPerson;
 import com.example.flow.classes.Trip;
+import com.example.flow.services.CheckInternet;
 import com.example.flow.services.CurrentData;
 import com.example.flow.services.RetrofitBuild;
 
@@ -102,23 +105,32 @@ public class TripFragment extends Fragment
             activate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    RetrofitBuild retrofit = RetrofitBuild.getInstance();
-                    Call<Trip> call = retrofit.apiService.activate("application/json", CurrentPerson.ApiKey, trip.getId());
-                    call.enqueue(new Callback<Trip>() {
-                        @SuppressLint("SetTextI18n")
-                        @Override
-                        public void onResponse(Call<Trip> call, Response<Trip> response) {
-                            trip = response.body();
-                            String day = getString(R.string.day, Integer.toString(trip.getDay()));
-                            activate.setEnabled(false);
-                            activate.setText(day);
-                        }
+                    if(CheckInternet.checkInternet(getActivity().getApplicationContext())){
+                        RetrofitBuild retrofit = RetrofitBuild.getInstance();
+                        Call<Trip> call = retrofit.apiService.activate("application/json", CurrentPerson.ApiKey, trip.getId());
+                        call.enqueue(new Callback<Trip>() {
+                            @SuppressLint("SetTextI18n")
+                            @Override
+                            public void onResponse(Call<Trip> call, Response<Trip> response) {
+                                trip = response.body();
+                                String day = getString(R.string.day, Integer.toString(trip.getDay()));
+                                activate.setEnabled(false);
+                                activate.setText(day);
+                            }
 
-                        @Override
-                        public void onFailure(Call<Trip> call, Throwable t) {
-                            return;
-                        }
-                    });
+                            @Override
+                            public void onFailure(Call<Trip> call, Throwable t) {
+                                return;
+                            }
+                        });
+                    }else{
+                        Context context = getActivity().getApplicationContext();
+                        CharSequence text = getActivity().getApplicationContext().getResources().getString(R.string.internetConnectie);
+                        int duration = Toast.LENGTH_SHORT;
+
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    }
                 }
             });
         }else{

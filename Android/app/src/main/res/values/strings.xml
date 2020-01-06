@@ -74,9 +74,11 @@
     <string name="firstname">First name</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="error">You need to enter a value</string>
+    <string name="errorMessage">You need to enter a value</string>
     <string name="logout">Log out</string>
     <string name="changePassword">Password</string>
+    <string name="internetConnectie">Geen interet connectie</string>
+
 
 
 

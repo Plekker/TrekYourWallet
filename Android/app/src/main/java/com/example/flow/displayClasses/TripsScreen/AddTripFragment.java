@@ -21,6 +21,7 @@ import com.example.flow.classes.Expense;
 import com.example.flow.classes.Trip;
 import com.example.flow.displayClasses.OverviewScreen.OverviewFragment;
 import com.example.flow.services.CurrentData;
+import com.example.flow.services.Empty;
 import com.example.flow.services.RetrofitBuild;
 
 import retrofit2.Call;
@@ -69,21 +70,31 @@ public class AddTripFragment extends Fragment
             @Override
             public void onClick(View view) {
                 EditText createdName = RootView.findViewById(R.id.nameTripField);
-                createdTripName = createdName.getText().toString();
                 EditText price = RootView.findViewById(R.id.budgetField);
-                priceExpense = Double.parseDouble(price.getText().toString());
+                createdTripName = createdName.getText().toString();
 
-                Trip trip = new Trip(createdTripName, priceExpense);
+                if(Empty.isImputNotEmpty(price.getText().toString()) && Empty.isImputNotEmpty(createdTripName) ){
 
-                FragmentManager fragmentManager = getFragmentManager();
-                Bundle args = new Bundle();
-                args.putParcelable("trip", trip);
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                AddCountriesToTripFragment NAME = new AddCountriesToTripFragment();
-                NAME.setArguments(args);
-                fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
-                fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
-                fragmentTransaction.commit();
+                    priceExpense = Double.parseDouble(price.getText().toString());
+
+                    Trip trip = new Trip(createdTripName, priceExpense);
+
+                    FragmentManager fragmentManager = getFragmentManager();
+                    Bundle args = new Bundle();
+                    args.putParcelable("trip", trip);
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    AddCountriesToTripFragment NAME = new AddCountriesToTripFragment();
+                    NAME.setArguments(args);
+                    fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
+                    fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
+                    fragmentTransaction.commit();
+                }
+                else{
+                    CharSequence cs = getActivity().getApplicationContext().getResources().getString(R.string.errorMessage);
+                    createdName.setError(cs);
+                    price.setError(cs);
+                }
+
 
             }
         });

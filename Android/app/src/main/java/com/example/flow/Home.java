@@ -16,7 +16,6 @@ import android.view.Gravity;
 import com.example.flow.classes.CurrentPerson;
 import com.example.flow.classes.Person;
 import com.example.flow.classes.PersonDto;
-import com.example.flow.displayClasses.LogOutScreen.LogOut;
 import com.example.flow.displayClasses.ChangePassword.ChangePasswordFragment;
 import com.example.flow.displayClasses.LoginScreens.Login;
 import com.example.flow.displayClasses.TripsScreen.AddTripFragment;
@@ -219,10 +218,6 @@ public class Home extends AppCompatActivity
                             overviewFragment,
                             overviewFragment.getTag()
                     ).commit();
-        }
-        else if (id == R.id.nav_logout) {
-            Intent intent = new Intent(Home.this, LogOut.class);//getApplicationContext() - Returns the context for all activities running in application.
-            startActivity(intent);
         }
 
 

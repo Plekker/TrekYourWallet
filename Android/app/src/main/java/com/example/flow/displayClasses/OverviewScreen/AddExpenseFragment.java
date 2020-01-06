@@ -1,6 +1,7 @@
 package com.example.flow.displayClasses.OverviewScreen;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,10 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.flow.R;
 import com.example.flow.classes.CurrentPerson;
 import com.example.flow.classes.Expense;
+import com.example.flow.services.CheckInternet;
 import com.example.flow.services.CurrentData;
 import com.example.flow.services.Empty;
 import com.example.flow.services.RetrofitBuild;
@@ -73,35 +76,48 @@ public class AddExpenseFragment extends Fragment
                     priceExpense = Double.parseDouble(price.getText().toString());
                     createdExpenseName = createdName.getText().toString();
 
+                    if(CheckInternet.checkInternet(getActivity().getApplicationContext())){
+                        RetrofitBuild retrofit = RetrofitBuild.getInstance();
+                        Call<Expense> call = retrofit.apiService.addExpense("application/json", CurrentPerson.ApiKey, CurrentData.currentTrip.getId(), new Expense(createdExpenseName, priceExpense, "EUR", CurrentData.currentTrip));
+                        call.enqueue(new Callback<Expense>() {
+                            @Override
+                            public void onResponse(Call<Expense> call, Response<Expense> response) {
+                                CurrentData.currentTrip = response.body().getTrip();
+                                CurrentData.expenesForCurrenTrip.add(response.body());
 
-                    RetrofitBuild retrofit = RetrofitBuild.getInstance();
-                    Call<Expense> call = retrofit.apiService.addExpense("application/json", CurrentPerson.ApiKey, CurrentData.currentTrip.getId(), new Expense(createdExpenseName, priceExpense, "EUR", CurrentData.currentTrip));
-                    call.enqueue(new Callback<Expense>() {
-                        @Override
-                        public void onResponse(Call<Expense> call, Response<Expense> response) {
-                            CurrentData.currentTrip = response.body().getTrip();
-                            CurrentData.expenesForCurrenTrip.add(response.body());
+                                FragmentManager fragmentManager = getFragmentManager();
+                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                OverviewFragment NAME = new OverviewFragment();
+                                fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
+                                fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
+                                fragmentTransaction.commit();
+                            }
 
-                            FragmentManager fragmentManager = getFragmentManager();
-                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            OverviewFragment NAME = new OverviewFragment();
-                            fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
-                            fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
-                            fragmentTransaction.commit();
-                        }
+                            @Override
+                            public void onFailure(Call<Expense> call, Throwable t) {
+                                return;
+                            }
+                        });
 
-                        @Override
-                        public void onFailure(Call<Expense> call, Throwable t) {
-                            return;
-                        }
-                    });
+                        FragmentManager fragmentManager = getFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        OverviewFragment NAME = new OverviewFragment();
+                        fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
+                        fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
+                        fragmentTransaction.commit();
+                    }else {
+                        Context context = getActivity().getApplicationContext();
+                        CharSequence text = getActivity().getApplicationContext().getResources().getString(R.string.internetConnectie);
+                        int duration = Toast.LENGTH_SHORT;
 
-                    FragmentManager fragmentManager = getFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    OverviewFragment NAME = new OverviewFragment();
-                    fragmentTransaction.replace(R.id.relativelayout_for_fragment, NAME);
-                    fragmentTransaction.addToBackStack(null); //when back button is pressed on next page, the app returns to this page
-                    fragmentTransaction.commit();
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    }
+
+                }else{
+                    CharSequence cs = getActivity().getApplicationContext().getResources().getString(R.string.errorMessage);
+                    createdName.setError(cs);
+                    price.setError(cs);
                 }
             }
         });
